@@ -1,0 +1,125 @@
+.slims-new-titles {
+	display: flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.slims-new-titles .slims-biblio-item {
+	padding: 10px;
+	margin: 5px;
+	background-color: white;
+	flex-grow: 1;
+	flex-shrink: 1;
+	flex-basis: 0px;
+	filter: drop-shadow(0 0 0.30rem #0693e3);
+}
+
+.slims-new-titles .slims-biblio-item:hover {
+	background-color: #242c5e;
+	filter: drop-shadow(0 0 0.30rem #0693e3);
+}
+
+.slims-new-titles .slims-biblio-item:hover * {
+	color: #fff;
+}
+
+.slims-search-box {
+	background-color: #fff;
+	padding: 10px;
+	margin-bottom: 10px;
+}
+
+.slims-search-box .slims-search-input {
+	display: flex;
+}
+
+.slims-search-box #slims-search {
+	flex-grow: 3;
+}
+
+.slims-search-box button {
+	border: 1px solid #bcbcbc;
+ 	width: 100%;
+ 	font-size: 16px;
+ 	padding: 10px 10px;
+ 	margin: 0 0 23px 0;
+ 	height: auto;
+	flex-basis: 20%;
+}
+
+.slims-opac .slims-biblio-item {
+	display: flex;
+}
+
+.slims-opac .slims-biblio-item .slims-biblio-img {
+	flex-shrink: 0;
+	padding: 10px;
+}
+
+.slims-title h5 {
+	text-transform: initial;
+}
+
+.slims-biblio-notice {
+	padding: 10px;
+}
+
+.advance-search {
+	display: none;
+}
+
+.paging {
+	margin: 0 auto;
+}
+
+.paging .paging-current-page,
+.paging > span > a {
+	display: inline-block;
+	padding: 10px;
+	border: 1px solid rgb(193, 193, 193);
+	text-decoration: none;
+	background-color: #fff;
+}
+
+.paging .paging-current-page {
+	color: #fff;
+	background-color: #242c5e;
+}
+
+.advance-search-fields {
+	display: flex;
+	flex-wrap: wrap;
+	flex-direction: row;
+}
+
+.advance-search-fields div {
+	flex-basis: 0;
+	flex-grow: 1;
+	flex-shrink: 1;
+	margin: 5px;
+}
+
+.slims-biblio-detail {
+	padding: 20px;
+}
+
+.slims-biblio-detail-row {
+	display: flex;
+	flex-wrap: wrap;
+	font-size: 1em;
+	margin-top: 5px;
+	margin-bottom: 5px;
+	border-top: 1px solid #999;
+}
+
+.biblio-detail-label {
+	font-weight: bold;
+	flex-grow: 1;
+	flex-shrink: 0;
+	flex-basis: 20%;
+}
+
+.biblio-detail-data {
+	flex-basis: 80%;
+}
