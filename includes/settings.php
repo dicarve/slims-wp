@@ -102,12 +102,12 @@ function slims_open_biblio_detail_cb( $args ) {
 	// Get the value of the setting we've registered with register_setting()
 	$options = get_option( 'slims_options' );
 	?>
-	<select id="<?php echo esc_attr( $args['label_for'] ); ?>" data-custom="<?php echo esc_attr( $args['slims_default_fetch_method'] ); ?>"
+	<select id="<?php echo esc_attr( $args['label_for'] ); ?>" data-custom="<?php echo esc_attr( $args['slims_default_open_biblio'] ); ?>"
 		name="slims_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
-		<option value="slims" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'json', false ) ) : $args['slims_default_fetch_method']; ?>>
+		<option value="slims" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'json', false ) ) : $args['slims_default_open_biblio']; ?>>
 			<?php esc_html_e( 'Open Biblio/Record Detail in SLiMS site', 'slims' ); ?>
 		</option>
- 		<option value="wp" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'xml', false ) ) : $args['slims_default_fetch_method']; ?>>
+ 		<option value="wp" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'xml', false ) ) : $args['slims_default_open_biblio']; ?>>
 			<?php esc_html_e( 'Open Biblio/Record Detail in WordPress page', 'slims' ); ?>
 		</option>
 	</select>
