@@ -1,17 +1,15 @@
 .slims-new-titles {
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	justify-content: space-around;
+	flex-flow: row wrap;
+	justify-content: space-evenly;
 }
 
-.slims-new-titles .slims-biblio-item {
-	padding: 10px;
-	margin: 5px;
+.slims-biblio-item {
+	padding: 5px;
+	margin: 3px;
 	background-color: white;
+	flex-basis: 150px;
 	flex-grow: 1;
-	flex-shrink: 1;
-	flex-basis: 0px;
 	filter: drop-shadow(0 0 0.30rem #0693e3);
 }
 
@@ -34,7 +32,14 @@
 	display: flex;
 }
 
+.advance-search-fields input[type=text],
+.advance-search-fields button,
 .slims-search-box #slims-search {
+	border: 1px solid #bcbcbc;
+	font-size: 16px;
+	padding: 10px 10px;
+	margin: 0 0 23px 0;
+	height: auto;
 	flex-grow: 3;
 }
 
