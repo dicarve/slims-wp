@@ -22,7 +22,8 @@
  * Update URI:        https://dicarve.com/slims-wp
  */
 
-define('SLIMS_PAGING_PAGE_VARNAME', 'spage');
+define( 'SLIMS_PAGING_PAGE_VARNAME', 'spage' );
+define( 'SLIMS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
 
 /**
  * SLiMS Activation hook function
@@ -68,6 +69,7 @@ register_deactivation_hook( __FILE__, 'slims_deactivate' );
 function slims_register_css_js() {
   wp_enqueue_style( 'slims-main-style', plugins_url('/public/css/slims.css', __FILE__), array(), time() );
   wp_enqueue_script( 'slims-main-js', plugins_url('/public/js/slims.js', __FILE__), array(), time(), array('in_footer' => true) );
+  wp_enqueue_script( 'jquery', 'https://code.jquery.com/jquery-3.7.1.slim.min.js', null, null, true );
 }
 add_action( 'wp_enqueue_scripts', 'slims_register_css_js' );
 
@@ -196,6 +198,10 @@ function slims_biblio_opac_shortcode() {
 
 function slims_biblio_detail_shortcode() {
     $output = NULL;
+
+    if (!isset($_GET['biblio_id']) || empty($_GET['biblio_id'])) {
+        return $output;
+    }
 
     $biblio_id = $_GET['biblio_id'];
     $biblio_detail = _slims_biblio_detail_query($biblio_id);

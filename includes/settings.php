@@ -199,7 +199,7 @@ function slims_options_page_html() {
 }
 
 /** Add SLiMS setting page link to plugin description */
-add_filter( 'plugin_action_links', 'slims_settings_link' );
+add_filter( 'plugin_action_links_'. SLIMS_PLUGIN_BASE, 'slims_settings_link' );
 function slims_settings_link( $links ) {
 	// Build and escape the URL.
 	$url = esc_url( add_query_arg(
