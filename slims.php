@@ -30,24 +30,28 @@ define( 'SLIMS_PLUGIN_BASE', plugin_basename( __FILE__ ) );
  */
 function slims_activate() {
   // register pages for SLiMS opac
-  $biblio_opac_page = array(
-    'post_name' => 'biblio-opac',
-    'post_title'    => 'OPAC',
-    'post_content'  => '[slims_biblio_opac]',
-    'post_status'   => 'publish',
-    'post_type' => 'page',
-    'comment_status ' => 'closed'
-  );
-	
-  // register pages for SLiMS biblio detail
-  $biblio_detail_page = array(
-    'post_name' => 'biblio-detail',
-    'post_title'    => 'Detail Koleksi',
-    'post_content'  => '[slims_biblio_detail]',
-    'post_status'   => 'publish',
-    'post_type' => 'page',
-    'comment_status ' => 'closed'
-  );
+  if (!get_page_by_path('biblio-opac')) {
+    $biblio_opac_page = array(
+        'post_name' => 'biblio-opac',
+        'post_title'    => 'OPAC',
+        'post_content'  => '<!-- wp:shortcode -->[slims_search_block]<!-- /wp:shortcode --><!-- wp:shortcode -->[slims_biblio_opac]<!-- /wp:shortcode -->',
+        'post_status'   => 'publish',
+        'post_type' => 'page',
+        'comment_status ' => 'closed'
+      );
+  }
+
+  if (!get_page_by_path('biblio-detail')) {
+    // register pages for SLiMS biblio detail
+    $biblio_detail_page = array(
+        'post_name' => 'biblio-detail',
+        'post_title'    => 'Detail Koleksi',
+        'post_content'  => '<!-- wp:shortcode -->[slims_biblio_detail]<!-- /wp:shortcode -->',
+        'post_status'   => 'publish',
+        'post_type' => 'page',
+        'comment_status ' => 'closed'
+    );    
+  }
   
   // Insert the pages into the database
   $insert_page1 = wp_insert_post( $biblio_opac_page );
