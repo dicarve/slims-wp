@@ -87,37 +87,54 @@ function _slims_query($query_string = '', $page = 1, $adv_search = array()) {
     }
 
     $slims_config = get_option( 'slims_options' );
+
+    // using JSON or XML
+    $fetch_method = 'JSONLD=true';
+    if ($slims_config['slims_field_fetch_method'] == 'xml') {
+        $fetch_method = 'resultXML=true';
+    }
 	
     if ($adv_search) {
         $query = http_build_query($adv_search);
-        $ch = curl_init($slims_config['slims_base_url']."/index.php?JSONLD=true&$query&search=search&page=$page");
+        $ch = curl_init($slims_config['slims_base_url']."/index.php?$fetch_method&$query&search=search&page=$page");
     } else {
-        $ch = curl_init($slims_config['slims_base_url']."/index.php?JSONLD=true&keywords=$query_string&search=search&page=$page");
+        $ch = curl_init($slims_config['slims_base_url']."/index.php?$fetch_method&keywords=$query_string&search=search&page=$page");
     }
 	
 	
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	$json = curl_exec($ch);	
+	$slims_results = curl_exec($ch);	
 	$httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 	curl_close($ch);
 	
 	if ($httpcode != 200) {
 		return null;
 	} else {
-		return json_decode($json, true);
+        if ($slims_config['slims_field_fetch_method'] == 'json') {
+            $records = json_decode($slims_results, true);
+        } else {
+            $records = new SimpleXMLElement($slims_results);
+        }
+		return $records;
 	}
 }
 
 function _slims_biblio_detail_query($biblio_id) {
 	$biblio_id = (int) $biblio_id;	
-
     $slims_config = get_option( 'slims_options' );
-	$ch = curl_init($slims_config['slims_base_url']."/index.php?p=show_detail&JSONLD=true&id=$biblio_id");
+
+    // using JSON or XML
+    $fetch_method = 'JSONLD=true';
+    if ($slims_config['slims_field_fetch_method'] == 'xml') {
+        $fetch_method = 'inXML=true';
+    }
+
+	$ch = curl_init($slims_config['slims_base_url']."/index.php?p=show_detail&$fetch_method&id=$biblio_id");
 	
 	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	$json = curl_exec($ch);	
+	$slims_result = curl_exec($ch);	
 	$httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 	curl_close($ch);
 	
@@ -125,16 +142,21 @@ function _slims_biblio_detail_query($biblio_id) {
 		// something wrong with the response so we return null
 		return null;
 	} else {
-		return json_decode($json, true);
+        if ($slims_config['slims_field_fetch_method'] == 'json') {
+            $record = json_decode($slims_result, true);
+        } else {
+            $record = new SimpleXMLElement($slims_result);
+        }
+		return $record;
 	}
 }
 
 function slims_new_titles_shortcode() {
     $output = NULL;
+    $slims_config = get_option( 'slims_options' );
 
 	$biblio_result = _slims_query();
 	if ($biblio_result) {
-		$biblio = $biblio_result['@graph'];
     	// Start output buffering
     	ob_start();
     	// Include the template file
@@ -144,13 +166,14 @@ function slims_new_titles_shortcode() {
   
     	return $output;		
 	} else {
-		return '<div class="slims-no-result notice">No New Titles</div>';
+		return '<div class="card slims-no-result notice">No New Titles</div>';
 	}
 }
 
 function slims_search_block_shortcode() {
     $output = NULL;
 
+    $slims_config = get_option( 'slims_options' );
     // Start output buffering
     ob_start();
     // Include the template file
@@ -166,6 +189,8 @@ function slims_biblio_opac_shortcode() {
     $keywords = null;
     $adv_search = array();
     $page = 1;
+    $slims_config = get_option( 'slims_options' );
+
     if (isset($_GET['keywords'])) {
         $keywords = sanitize_text_field($_GET['keywords']);
         if (!empty($_GET['title']) OR !empty($_GET['author']) OR !empty($_GET['topic'])) {
@@ -202,6 +227,7 @@ function slims_biblio_opac_shortcode() {
 
 function slims_biblio_detail_shortcode() {
     $output = NULL;
+    $slims_config = get_option( 'slims_options' );
 
     if (!isset($_GET['biblio_id']) || empty($_GET['biblio_id'])) {
         return $output;

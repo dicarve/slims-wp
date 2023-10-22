@@ -36,7 +36,7 @@ function slims_settings_init() {
 		array(
 			'label_for'         => 'slims_open_biblio_detail',
 			'class'             => 'slims_row',
-			'slims_default_open_biblio'    => 'slims',
+			'slims_default_open_biblio'    => 'wp',
 		)
 	);
 
@@ -104,11 +104,11 @@ function slims_open_biblio_detail_cb( $args ) {
 	?>
 	<select id="<?php echo esc_attr( $args['label_for'] ); ?>" data-custom="<?php echo esc_attr( $args['slims_default_open_biblio'] ); ?>"
 		name="slims_options[<?php echo esc_attr( $args['label_for'] ); ?>]">
-		<option value="slims" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'json', false ) ) : $args['slims_default_open_biblio']; ?>>
-			<?php esc_html_e( 'Open Biblio/Record Detail in SLiMS site', 'slims' ); ?>
-		</option>
- 		<option value="wp" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'xml', false ) ) : $args['slims_default_open_biblio']; ?>>
+		<option value="wp" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'wp', false ) ) : $args['slims_default_open_biblio']; ?>>
 			<?php esc_html_e( 'Open Biblio/Record Detail in WordPress page', 'slims' ); ?>
+		</option>
+		<option value="slims" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'slims', false ) ) : $args['slims_default_open_biblio']; ?>>
+			<?php esc_html_e( 'Open Biblio/Record Detail in SLiMS site', 'slims' ); ?>
 		</option>
 	</select>
 	<p class="description">

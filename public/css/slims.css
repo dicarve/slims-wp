@@ -4,18 +4,22 @@
 	justify-content: space-evenly;
 }
 
-.slims-biblio-item {
+.slims-new-titles .slims-biblio-item {
 	padding: 5px;
 	margin: 3px;
 	background-color: white;
 	flex-basis: 150px;
 	flex-grow: 1;
-	filter: drop-shadow(0 0 0.30rem #0693e3);
+	filter: drop-shadow(0 0 0.30rem #242c5e);
+}
+
+.slims-new-titles .slims-biblio-item .slims-biblio-img {
+	text-align: center;
 }
 
 .slims-new-titles .slims-biblio-item:hover {
 	background-color: #242c5e;
-	filter: drop-shadow(0 0 0.30rem #0693e3);
+	filter: drop-shadow(0 0 0.30rem #242c5e);
 }
 
 .slims-new-titles .slims-biblio-item:hover * {
@@ -55,11 +59,15 @@
 
 .slims-opac .slims-biblio-item {
 	display: flex;
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+	transition: all 0.3s cubic-bezier(.25, .8, .25, 1);
+	margin-bottom: 10px;
+	margin-top: 10px;
 }
 
 .slims-opac .slims-biblio-item .slims-biblio-img {
-	flex-shrink: 0;
 	padding: 10px;
+	flex-shrink: 0;
 }
 
 .slims-title h5 {
@@ -128,3 +136,81 @@
 .biblio-detail-data {
 	flex-basis: 80%;
 }
+
+/* The Modal (background) */
+.modal {
+	display: none; /* Hidden by default */
+	position: fixed; /* Stay in place */
+	z-index: 1; /* Sit on top */
+	padding-top: 100px; /* Location of the box */
+	left: 0;
+	top: 0;
+	width: 100%; /* Full width */
+	height: 100%; /* Full height */
+	overflow: auto; /* Enable scroll if needed */
+	background-color: rgb(0,0,0); /* Fallback color */
+	background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  }
+  
+  /* Modal Content */
+  .modal-content {
+	position: relative;
+	background-color: #fefefe;
+	margin: auto;
+	padding: 0;
+	border: 1px solid #888;
+	width: 50%;
+	box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	-webkit-animation-name: animatetop;
+	-webkit-animation-duration: 0.4s;
+	animation-name: animatetop;
+	animation-duration: 0.4s
+  }
+  
+  /* Add Animation */
+  @-webkit-keyframes animatetop {
+	from {top:-300px; opacity:0} 
+	to {top:0; opacity:1}
+  }
+  
+  @keyframes animatetop {
+	from {top:-300px; opacity:0}
+	to {top:0; opacity:1}
+  }
+  
+  /* The Close Button */
+  .close {
+	color: white;
+	float: right;
+	font-size: 28px;
+	font-weight: bold;
+	margin-top: 16px;
+  }
+  
+  .close:hover,
+  .close:focus {
+	color: #000;
+	text-decoration: none;
+	cursor: pointer;
+  }
+  
+  .modal-header {
+	padding: 2px 16px;
+	background-color: #242c5e;
+	color: white;
+  }
+  
+  .modal-header h2 {
+	color: white;
+  }
+  
+  .modal-body {
+	padding: 0px;
+	margin: 0px;
+  }
+  
+  .modal-footer {
+	padding: 2px 16px;
+	background-color: #242c5e;
+	color: white;
+  }
