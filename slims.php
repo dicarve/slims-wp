@@ -11,7 +11,7 @@
  * Plugin Name:       SLiMS Catalog Integration
  * Plugin URI:        https://dicarve.com/slims-wp
  * Description:       Integrate SLiMS Catalog into WordPress. This plugins uses SLiMS JSON/XML catalog service to fetch catalog records. Compatible with SLiMS 9.
- * Version:           0.5.0
+ * Version:           0.6.0
  * Requires at least: 5.2
  * Requires PHP:      7.2
  * Author:            Ari Nugraha
@@ -50,9 +50,9 @@ function slims_activate() {
         'post_status'   => 'publish',
         'post_type' => 'page',
         'comment_status ' => 'closed'
-    );    
+    );
   }
-  
+
   // Insert the pages into the database
   $insert_page1 = wp_insert_post( $biblio_opac_page );
   $insert_page2 = wp_insert_post( $biblio_detail_page );
@@ -69,18 +69,18 @@ register_deactivation_hook( __FILE__, 'slims_deactivate' );
 
 /**
  * SLiMS specific stylesheet and js registration
- **/ 
+ **/
 function slims_register_css_js() {
   wp_enqueue_style( 'slims-main-style', plugins_url('/public/css/slims.css', __FILE__), array(), time() );
   wp_enqueue_script( 'slims-main-js', plugins_url('/public/js/slims.js', __FILE__), array(), time(), array('in_footer' => true) );
-  wp_enqueue_script( 'jquery', 'https://code.jquery.com/jquery-3.7.1.slim.min.js', null, null, true );
+  wp_enqueue_script( 'jquery', '/public/js/jquery-3.7.1.slim.min.js', null, null, true );
 }
 add_action( 'wp_enqueue_scripts', 'slims_register_css_js' );
 
 
 function _slims_query($query_string = '', $page = 1, $adv_search = array()) {
 	if ($query_string) {
-		$query_string = urlencode($query_string);	
+		$query_string = urlencode($query_string);
 	}
     if ($page < 1) {
         $page = 1;
@@ -93,21 +93,21 @@ function _slims_query($query_string = '', $page = 1, $adv_search = array()) {
     if ($slims_config['slims_field_fetch_method'] == 'xml') {
         $fetch_method = 'resultXML=true';
     }
-	
+
     if ($adv_search) {
         $query = http_build_query($adv_search);
         $ch = curl_init($slims_config['slims_base_url']."/index.php?$fetch_method&$query&search=search&page=$page");
     } else {
         $ch = curl_init($slims_config['slims_base_url']."/index.php?$fetch_method&keywords=$query_string&search=search&page=$page");
     }
-	
-	
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json, application/xml, text/xml'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	$slims_results = curl_exec($ch);	
+	$slims_results = curl_exec($ch);
 	$httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 	curl_close($ch);
-	
+
 	if ($httpcode != 200) {
 		return null;
 	} else {
@@ -121,7 +121,7 @@ function _slims_query($query_string = '', $page = 1, $adv_search = array()) {
 }
 
 function _slims_biblio_detail_query($biblio_id) {
-	$biblio_id = (int) $biblio_id;	
+	$biblio_id = (int) $biblio_id;
     $slims_config = get_option( 'slims_options' );
 
     // using JSON or XML
@@ -131,13 +131,13 @@ function _slims_biblio_detail_query($biblio_id) {
     }
 
 	$ch = curl_init($slims_config['slims_base_url']."/index.php?p=show_detail&$fetch_method&id=$biblio_id");
-	
-	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json'));
+
+	curl_setopt($ch, CURLOPT_HTTPHEADER, array('Accept: application/json, application/xml, text/xml'));
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-	$slims_result = curl_exec($ch);	
+	$slims_result = curl_exec($ch);
 	$httpcode = curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
 	curl_close($ch);
-	
+
 	if ($httpcode != 200) {
 		// something wrong with the response so we return null
 		return null;
@@ -163,8 +163,8 @@ function slims_new_titles_shortcode() {
     	require_once plugin_dir_path(__FILE__) . 'public/views/new-titles.php';
     	// End buffering and return its contents
     	$output = ob_get_clean();
-  
-    	return $output;		
+
+    	return $output;
 	} else {
 		return '<div class="card slims-no-result notice">No New Titles</div>';
 	}
@@ -180,7 +180,7 @@ function slims_search_block_shortcode() {
     require_once plugin_dir_path(__FILE__) . 'public/views/search-block.php';
     // End buffering and return its contents
     $output = ob_get_clean();
-  
+
     return $output;
 }
 
@@ -218,7 +218,7 @@ function slims_biblio_opac_shortcode() {
     	require_once plugin_dir_path(__FILE__) . 'public/views/opac.php';
     	// End buffering and return its contents
     	$output = ob_get_clean();
-  
+
     	return $output;
 	} else {
 		return '<div class="slims-no-result notice">No Collection Found Yet</div>';
@@ -235,21 +235,21 @@ function slims_biblio_detail_shortcode() {
 
     $biblio_id = $_GET['biblio_id'];
     $biblio_detail = _slims_biblio_detail_query($biblio_id);
-	
+
     // Start output buffering
     ob_start();
     // Include the template file
     require_once plugin_dir_path(__FILE__) . 'public/views/detail.php';
     // End buffering and return its contents
     $output = ob_get_clean();
-  
+
     return $output;
 }
 
 /**
- * 
+ *
  * Register shortcode
- * 
+ *
  */
 add_shortcode( 'slims_new_titles', 'slims_new_titles_shortcode' );
 add_shortcode( 'slims_search_block', 'slims_search_block_shortcode' );
@@ -359,9 +359,9 @@ function paging($base_url, $total_rows, $rows_per_page = 10, $pages_per_section 
 
 
 /**
- * 
+ *
  * Function to to ellipse long text
- * 
+ *
  **/
 function _ellipse($text, $maxlen, $ellip='...', $towords=TRUE) {
   // trim whitespace
