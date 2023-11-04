@@ -25,7 +25,9 @@ if ($slims_config['slims_field_fetch_method'] == 'xml') {
 </div>
 <div class="slims-biblio-list slims-opac">
 <?php
-echo paging( get_site_url(null, '/biblio-opac/'), $biblio_result['total_rows'], $biblio_result['records_each_page'], 10, SLIMS_PAGING_PAGE_VARNAME );
+$paging_base_permalink = $is_plain_permalink?preg_replace('/\?page_id=[1-9]+/i', '', $biblio_opac_permalink):$biblio_opac_permalink;
+$paging = paging( $paging_base_permalink, $biblio_result['total_rows'], $biblio_result['records_each_page'], 10, SLIMS_PAGING_PAGE_VARNAME );
+echo $paging;
 foreach ($biblio as $b) : ?>
 	<div class="slims-biblio-item">
 		<div class="slims-biblio-img">
@@ -47,9 +49,9 @@ foreach ($biblio as $b) : ?>
 			<div class="slims-title"><h5>
 				<?php if ($slims_config['slims_open_biblio_detail'] == 'wp') : ?>
 					<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
-						<a href="<?php echo get_site_url(null, '/biblio-detail/') ?>?biblio_id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
+						<a href="<?php echo $biblio_detail_permalink.( $is_plain_permalink?'&':'?' ); ?>biblio_id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
 					<?php else: ?>
-						<a href="<?php echo get_site_url(null, '/biblio-detail/') ?>?biblio_id=<?php echo get_biblio_id($b['@id']) ?>" class="open-in-wp" target="_blank"><?php echo $b['name'] ?></a>
+						<a href="<?php echo $biblio_detail_permalink.( $is_plain_permalink?'&':'?' ); ?>biblio_id=<?php echo get_biblio_id($b['@id']) ?>" class="open-in-wp" target="_blank"><?php echo $b['name'] ?></a>
 					<?php endif; ?>
 				<?php else: ?>
 					<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
@@ -64,13 +66,13 @@ foreach ($biblio as $b) : ?>
 					if (isset($b->name) && $b->name) {
 						$authors = array();
 						foreach ($b->name as $author) {
-							$authors[] = '<a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$author->namePart.'"').'">'.$author->namePart.'</a>';
+							$authors[] = '<a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$author->namePart.'"').'">'.$author->namePart.'</a>';
 						}
 						echo implode(' - ', $authors);						
 					}
 				} else {
 					if ($b['author']) {
-						array_walk($b['author']['name'], function(&$i, $k) { $i = '<a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$i.'"').'">'.$i.'</a>'; });
+						array_walk($b['author']['name'], function(&$i, $k) { $i = '<a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$i.'"').'">'.$i.'</a>'; });
 						echo implode(' - ', $b['author']['name']);
 					}
 				}
@@ -91,7 +93,7 @@ foreach ($biblio as $b) : ?>
 	</div>
 <?php
 endforeach;
-echo paging( get_site_url(null, '/biblio-opac/'), $biblio_result['total_rows'], $biblio_result['records_each_page'], 10, SLIMS_PAGING_PAGE_VARNAME );
+echo $paging;
 ?>
 </div>
 

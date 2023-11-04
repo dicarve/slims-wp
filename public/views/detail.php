@@ -80,8 +80,9 @@ if ($slims_config['slims_field_fetch_method'] == 'xml') {
         <label for="biblio-authors" class="biblio-detail-label"><?php echo __("Author") ?></label>
         <div class="biblio-detail-data" id="biblio-authors"><?php 
             if ($authors) {
-                array_walk($authors, function(&$i, $k) { $i = '<div class="biblio-author"><a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$i.'"').'">'.$i.'</a></div>'; });
-                echo implode("\n", $authors);
+                foreach ($authors as $a) {
+                    echo '<div class="biblio-author"><a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$a.'"').'">'.$a.'</a></div>';
+                }
             }
         ?>
         </div>
@@ -119,10 +120,10 @@ if ($slims_config['slims_field_fetch_method'] == 'xml') {
         <div class="biblio-detail-data" id="biblio-keywords"><?php 
             if (is_array($keywords)) {
                 foreach ($keywords as $k) {
-                    echo '<div class="biblio-topic"><a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&topic='.urlencode('"'.$k.'"').'">'.$k.'</a></div>';
+                    echo '<div class="biblio-topic"><a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&topic='.urlencode('"'.$k.'"').'">'.$k.'</a></div>';
                 }
             } else {
-                echo '<div class="biblio-topic"><a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&topic='.urlencode('"'.$keywords.'"').'">'.$keywords.'</a></div>';
+                echo '<div class="biblio-topic"><a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&topic='.urlencode('"'.$keywords.'"').'">'.$keywords.'</a></div>';
             } 
         ?></div>
     </div>
@@ -130,9 +131,21 @@ if ($slims_config['slims_field_fetch_method'] == 'xml') {
     if (isset($biblio_detail->mods->location)) {
         echo '<div class="slims-biblio-detail-row">';
         echo '<label for="biblio-location" class="biblio-detail-label">'.__("Physical Location").'</label>';
-        echo '<div class="biblio-detail-data" id="biblio-keywords">';
+        echo '<div class="biblio-detail-data" id="biblio-location">';
         foreach ($biblio_detail->mods->location as $l) {
             echo '<div class="biblio-location">'.$l->physicalLocation.' (Call Number: '.$l->shelfLocator.')</div>';
+        }
+        echo '</div></div>';
+    }
+    if ($slims_config['slims_field_fetch_method'] == 'xml') {
+        echo '<div class="slims-biblio-detail-row">';
+        echo '<label for="biblio-digitals" class="biblio-detail-label">'.__("Downloads").'</label>';
+        echo '<div class="biblio-detail-data" id="biblio-digitals">';
+        if ($_slims_info->digitals) { 
+            foreach ($_slims_info->digitals as $file) { 
+                $attr = $file->digital_item->attributes();
+                echo '<div class="slims-file"><a href="'.$slims_config['slims_base_url'].'/index.php?p=fstream&fid='.$attr['id'].'&bid='.(string)$biblio_detail->mods['id'].'">'.$file->digital_item.'</a></div>';
+            }
         }
         echo '</div></div>';
     }

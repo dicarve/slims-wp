@@ -27,9 +27,9 @@ foreach ($biblio as $b) {
 	echo '<div class="slims-title"><h6>';
 	if ($slims_config['slims_open_biblio_detail'] == 'wp') : ?>
 		<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
-			<a href="<?php echo get_site_url(null, '/biblio-detail/') ?>?biblio_id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
+			<a href="<?php echo $biblio_detail_permalink.( $is_plain_permalink?'&':'?' ) ?>biblio_id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
 		<?php else: ?>
-			<a href="<?php echo get_site_url(null, '/biblio-detail/') ?>?biblio_id=<?php echo get_biblio_id($b['@id']) ?>" class="open-in-wp" target="_blank"><?php echo $b['name'] ?></a>
+			<a href="<?php echo $biblio_detail_permalink.( $is_plain_permalink?'&':'?' ) ?>biblio_id=<?php echo get_biblio_id($b['@id']) ?>" class="open-in-wp" target="_blank"><?php echo $b['name'] ?></a>
 		<?php endif; ?>
 	<?php else: ?>
 		<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
@@ -45,17 +45,20 @@ foreach ($biblio as $b) {
 		if (isset($b->name) && $b->name) {
 			$authors = array();
 			foreach ($b->name as $author) {
-				$authors[] = '<a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$author->namePart.'"').'">'.$author->namePart.'</a>';
+				$authors[] = '<a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$author->namePart.'"').'">'.$author->namePart.'</a>';
 			}
 			// get only the first three author
 			$first_three = count($authors)>3?array_slice($authors, 0, 3):$authors;
-			echo implode(' - ', $first_three);						
+			echo implode(' - ', $first_three);
 		}
 	} else {
 		if ($b['author']) {
-			array_walk($b['author']['name'], function(&$i, $k) { $i = '<a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$i.'"').'">'.$i.'</a>'; });
+			$authors = array();
 			// get only the first three author
 			$first_three = count($b['author']['name'])>3?array_slice($b['author']['name'], 0, 3):$b['author']['name'];
+			foreach($first_three as $a) {
+				$authors[] = '<a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$a.'"').'">'.$a.'</a>';
+			}
 			echo implode(' - ', $first_three);
 		}
 	}	

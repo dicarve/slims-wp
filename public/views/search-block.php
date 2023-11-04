@@ -1,5 +1,8 @@
 <div class="slims-search-box">
-	<form method="get" action="<?php echo get_site_url(null, '/biblio-opac'); ?>">
+	<form method="get" action="<?php echo $biblio_opac_permalink; ?>">
+		<?php if ($is_plain_permalink) : ?>
+			<input type="hidden" name="page_id" value="<?php echo $biblio_opac_page_id ?>" />
+		<?php endif; ?>
 		<div class="slims-search-input">
 			<input type="text" name="keywords" id="slims-search" value="<?php echo isset($_GET['keywords'])?trim($_GET['keywords']):'' ?>" placeholder="Type one or more keywords to search" />
 			<button type="submit" id="submit">Search</button>

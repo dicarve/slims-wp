@@ -157,6 +157,8 @@ function slims_new_titles_shortcode() {
 
 	$biblio_result = _slims_query();
 	if ($biblio_result) {
+        extract(slims_page_permalink());
+
     	// Start output buffering
     	ob_start();
     	// Include the template file
@@ -172,6 +174,7 @@ function slims_new_titles_shortcode() {
 
 function slims_search_block_shortcode() {
     $output = NULL;
+    extract(slims_page_permalink());
 
     $slims_config = get_option( 'slims_options' );
     // Start output buffering
@@ -212,6 +215,8 @@ function slims_biblio_opac_shortcode() {
     }
 	$biblio_result = _slims_query($keywords, $page, $adv_search);
 	if ($biblio_result) {
+        extract(slims_page_permalink());
+
     	// Start output buffering
     	ob_start();
     	// Include the template file
@@ -235,6 +240,7 @@ function slims_biblio_detail_shortcode() {
 
     $biblio_id = $_GET['biblio_id'];
     $biblio_detail = _slims_biblio_detail_query($biblio_id);
+    extract(slims_page_permalink());
 
     // Start output buffering
     ob_start();
@@ -262,6 +268,19 @@ require_once plugin_dir_path(__FILE__) . 'includes/settings.php';
 /**
  * UTILITY FUNCTIONS
  */
+function slims_page_permalink() {
+    $biblio_opac = get_page_by_path( "biblio-opac", OBJECT, array( 'page' ) );
+    $biblio_detail = get_page_by_path( "biblio-detail", OBJECT, array( 'page' ) );
+    $biblio_opac_permalink = get_permalink($biblio_opac->ID);
+    $biblio_detail_permalink = get_permalink($biblio_detail->ID);
+    $is_plain_permalink = strpos($biblio_opac_permalink, 'page_id=')!==false;
+
+    return array( 'is_plain_permalink' => $is_plain_permalink,
+        'biblio_opac_page_id' => $biblio_opac->ID,
+        'biblio_detail_page_id' => $biblio_detail->ID,
+        'biblio_opac_permalink' => $biblio_opac_permalink, 
+        'biblio_detail_permalink' => $biblio_detail_permalink );
+}
 
 function paging($base_url, $total_rows, $rows_per_page = 10, $pages_per_section = 10, $page_var_name = 'page', $url_fragment = '', $target_frame = '_self') {
   // check for wrong arguments
