@@ -23,7 +23,6 @@ if ($slims_config['slims_field_fetch_method'] == 'xml') {
 		<?php endif; ?>
 	</div>
 </div>
-<div style="height:30px" aria-hidden="true" class="wp-block-spacer"></div>
 <div class="slims-biblio-list slims-opac">
 <?php
 echo paging( get_site_url(null, '/biblio-opac/'), $biblio_result['total_rows'], $biblio_result['records_each_page'], 10, SLIMS_PAGING_PAGE_VARNAME );
@@ -54,7 +53,7 @@ foreach ($biblio as $b) : ?>
 					<?php endif; ?>
 				<?php else: ?>
 					<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
-						<a href="<?php echo $slims_config['slims_base_url']  ?>?p=show_detail&id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
+						<a href="<?php echo $slims_config['slims_base_url']  ?>/index.php?p=show_detail&id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
 					<?php else: ?>
 						<a href="<?php echo $b['@id'] ?>" class="open-in-slims" target="_blank"><?php echo $b['name'] ?></a>
 					<?php endif; ?>
@@ -77,6 +76,17 @@ foreach ($biblio as $b) : ?>
 				}
 				?>
 			</div>
+			<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
+				<?php if ($b_slims->digitals) : ?>
+					<div class="slims-files">
+					<div class="slims-files-heading"><?php echo __('Downloads') ?>: </div>	
+					<?php foreach ($b_slims->digitals as $file) : 
+						$attr = $file->digital_item->attributes(); ?>
+						<div class="slims-file"><a href="<?php echo $slims_config['slims_base_url'] ?>/index.php?p=fstream&fid=<?php echo $attr['id'] ?>&bid=<?php echo (string) $b['ID'] ?>"><?php echo $file->digital_item ?></a></div>
+					<?php endforeach; ?>
+					</div>
+				<?php endif; ?>
+			<?php endif; ?>
 		</div>
 	</div>
 <?php

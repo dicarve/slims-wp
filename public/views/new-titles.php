@@ -33,7 +33,7 @@ foreach ($biblio as $b) {
 		<?php endif; ?>
 	<?php else: ?>
 		<?php if ($slims_config['slims_field_fetch_method'] == 'xml') : ?>
-			<a href="<?php echo $slims_config['slims_base_url']  ?>?p=show_detail&id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
+			<a href="<?php echo $slims_config['slims_base_url']  ?>/index.php?p=show_detail&id=<?php echo (string) $b['ID'] ?>" class="open-in-wp" target="_blank"><?php echo $b->titleInfo->title ?><?php echo isset($b->titleInfo->subTitle)?' '.$b->titleInfo->subTitle:'' ?></a>
 		<?php else: ?>
 			<a href="<?php echo $b['@id'] ?>" class="open-in-slims" target="_blank"><?php echo $b['name'] ?></a>
 		<?php endif; ?>
@@ -47,12 +47,16 @@ foreach ($biblio as $b) {
 			foreach ($b->name as $author) {
 				$authors[] = '<a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$author->namePart.'"').'">'.$author->namePart.'</a>';
 			}
-			echo implode(' - ', $authors);						
+			// get only the first three author
+			$first_three = count($authors)>3?array_slice($authors, 0, 3):$authors;
+			echo implode(' - ', $first_three);						
 		}
 	} else {
 		if ($b['author']) {
 			array_walk($b['author']['name'], function(&$i, $k) { $i = '<a href="'.get_site_url(null, '/biblio-opac/').'?keywords=&author='.urlencode('"'.$i.'"').'">'.$i.'</a>'; });
-			echo implode(' - ', $b['author']['name']);
+			// get only the first three author
+			$first_three = count($b['author']['name'])>3?array_slice($b['author']['name'], 0, 3):$b['author']['name'];
+			echo implode(' - ', $first_three);
 		}
 	}	
 	echo '</div>';

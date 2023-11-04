@@ -57,6 +57,23 @@
 	flex-basis: 20%;
 }
 
+.card {
+	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.slims-biblio-detail-heading {
+	display: flex;
+	flex-wrap: nowrap;
+}
+
+.slims-biblio-detail-heading .slims-biblio-img img {
+	width: 150px;
+}
+
+.slims-biblio-detail-heading .biblio-title-top {
+	padding-left: 10px;
+}
+
 .slims-opac .slims-biblio-item {
 	display: flex;
 	box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
