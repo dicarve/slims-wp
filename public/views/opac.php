@@ -72,8 +72,11 @@ foreach ($biblio as $b) : ?>
 					}
 				} else {
 					if ($b['author']) {
-						array_walk($b['author']['name'], function(&$i, $k) { $i = '<a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$i.'"').'">'.$i.'</a>'; });
-						echo implode(' - ', $b['author']['name']);
+						$authors_formatted = array();
+						foreach ($b['author']['name'] as $a) {
+							$authors_formatted[] = '<a href="'.$biblio_opac_permalink.( $is_plain_permalink?'&':'?' ).'keywords=&author='.urlencode('"'.$a.'"').'">'.$a.'</a>';
+						}
+						echo implode(' - ', $authors_formatted);
 					}
 				}
 				?>
